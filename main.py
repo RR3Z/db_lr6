@@ -32,13 +32,15 @@ if __name__ == '__main__':
           "5 - Изменить название разработчика по ID\n"
           "6 - Изменить информацию об игре по ID\n"
           "7 - Удалить жанр по названию\n"
-          "8 - Удалить разработчика по названию\n")
+          "8 - Удалить разработчика по названию\n"
+          "9 - Аналитический запрос №1 - Получить список всех пользователей и количество их заказов с разбивкой по месяцам за последний год\n"
+          "10 - Аналитический запрос №2 - Получить список всех игр, у которых есть скидки в данный момент и указание на текущую скидку (по процентам и по цене в рублях)\n")
 
     # Узнать, какой запрос хочет выполнить пользователь
     userChoice = int(input("Ваш выбор: "))
 
     # Проверка на значение, которое вводить пользователь
-    if userChoice < 1 or userChoice > 8:
+    if userChoice < 1 or userChoice > 10:
         print(f"Значения '{userChoice}' нет в списке выбора")
 
     # Вызвать запрос, который попросил пользователь
@@ -58,8 +60,13 @@ if __name__ == '__main__':
         query.deleteGenre(mycursor, dbConnection)
     elif userChoice == 8:
         query.deleteDeveloper(mycursor, dbConnection)
+    elif userChoice == 9:
+        query.getUsersOrders(mycursor)
+    elif userChoice == 10:
+        query.getDiscountedGames(mycursor)
 
     # Закрыть доступ к БД
+    mycursor.close()
     dbConnection.close()
 
 

@@ -24,6 +24,7 @@ def readPcGamesData(mycursor):
     for dbData in mycursor:
         print(dbData)
 
+
 # ДОБАВЛЕНИЕ ДАННЫХ
 # Добавить жанр в таблицу genres
 def addGenre(mycursor, dbConnection):
@@ -50,6 +51,7 @@ def addOrder(mycursor, dbConnection):
     addOrderQuery = "INSERT INTO orders (order_date, product_units, id_users) VALUES ('%s', %d, %d);"
     mycursor.execute(addOrderQuery % order)
     dbConnection.commit()
+
 
 # ИЗМЕНЕНИЕ ДАННЫХ
 # Изменить имя компании разработчика по id
@@ -154,3 +156,55 @@ def deleteDeveloper(mycursor, dbConnection):
         dbConnection.commit()
     else:
         print(f"В таблице developers нет поля с именем {developerName}")
+
+
+# Аналитические запросы
+# Запрос №1 : Получить список всех пользователей и количество их заказов с разбивкой по месяцам за последний год
+def getUsersOrders(mycursor):
+    # Обратиться к БД с запросом
+    getUsersOrdersQuery = """
+            SELECT 
+                YEAR(orders.order_date) AS year,
+                MONTH(orders.order_date) AS month,
+                users.id_users,
+                users.nickname,
+                COUNT(orders.id_orders) AS orders_count
+            FROM 
+                users 
+                LEFT JOIN orders ON users.id_users = orders.id_users
+            WHERE 
+                orders.order_date >= DATE_SUB(NOW(), INTERVAL 1 YEAR)
+            GROUP BY 
+                year, month, users.id_users
+            ORDER BY 
+                year, month, users.id_users
+        """
+
+    mycursor.execute(getUsersOrdersQuery)
+    result = mycursor.fetchall()
+
+    # Вывести результат запроса
+    if result:
+        for year, month, user_id, nickname, orders_count in result:
+            print(f"{year}-{month:02d}: User {user_id} ({nickname}) made {orders_count} orders")
+    else:
+        print("За последний год не было совершено заказов")
+
+# Запрос №2: Получить список всех игр, у которых есть скидки в данный момент и указание на текущую скидку (по процентам и по цене в рублях)
+def getDiscountedGames(mycursor):
+    # Обратиться к БД с запросом
+    getDiscountedGamesQuery = """
+                            SELECT pc_games.name, pc_games.price, discounts.discount_percentage, discounts.discount_price
+                            FROM pc_games
+                            INNER JOIN discounts ON pc_games.id_games = discounts.id_games 
+                            WHERE NOW() BETWEEN discounts.start_date AND discounts.end_date  
+    """
+    mycursor.execute(getDiscountedGamesQuery)
+    result = mycursor.fetchall()
+
+    # Вывести результат запроса
+    if result:
+        for game in result:
+            print(game)
+    else:
+        print("Игр со скидками не имеется")
