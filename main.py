@@ -1,3 +1,5 @@
+import sys
+
 import mysql.connector
 from mysql.connector import Error
 import mySqlQueries as query
@@ -41,29 +43,29 @@ if __name__ == '__main__':
 
     # Проверка на значение, которое вводить пользователь
     if userChoice < 1 or userChoice > 10:
-        print(f"Значения '{userChoice}' нет в списке выбора")
-
-    # Вызвать запрос, который попросил пользователь
-    if userChoice == 1:
-        query.readOrdersData(mycursor)
-    elif userChoice == 2:
-        query.readPcGamesData(mycursor)
-    elif userChoice == 3:
-        query.addGenre(mycursor, dbConnection)
-    elif userChoice == 4:
-        query.addOrder(mycursor, dbConnection)
-    elif userChoice == 5:
-        query.updateDeveloperName(mycursor, dbConnection)
-    elif userChoice == 6:
-        query.updatePcGameInfo(mycursor, dbConnection)
-    elif userChoice == 7:
-        query.deleteGenre(mycursor, dbConnection)
-    elif userChoice == 8:
-        query.deleteDeveloper(mycursor, dbConnection)
-    elif userChoice == 9:
-        query.getUsersOrders(mycursor)
-    elif userChoice == 10:
-        query.getDiscountedGames(mycursor)
+        print(f"\nЗначения '{userChoice}' нет в списке выбора")
+    else:
+        # Вызвать запрос, который попросил пользователь
+        if userChoice == 1:
+            query.readOrdersData(mycursor)
+        elif userChoice == 2:
+            query.readPcGamesData(mycursor)
+        elif userChoice == 3:
+            query.addGenre(mycursor, dbConnection)
+        elif userChoice == 4:
+            query.addOrder(mycursor, dbConnection)
+        elif userChoice == 5:
+            query.updateDeveloperName(mycursor, dbConnection)
+        elif userChoice == 6:
+            query.updatePcGameInfo(mycursor, dbConnection)
+        elif userChoice == 7:
+            query.deleteGenre(mycursor, dbConnection)
+        elif userChoice == 8:
+            query.deleteDeveloper(mycursor, dbConnection)
+        elif userChoice == 9:
+            query.getUsersOrders(mycursor)
+        elif userChoice == 10:
+            query.getDiscountedGames(mycursor)
 
     # Закрыть доступ к БД
     mycursor.close()
