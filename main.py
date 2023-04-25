@@ -24,7 +24,7 @@ def create_connection(host_name, user_name, user_password, db_name):
 if __name__ == '__main__':
     # Открыть доступ к БД
     dbConnection = create_connection("localhost", "root", "951753swdQ", "db")
-    mycursor = dbConnection.cursor()
+    myСursor = dbConnection.cursor()
 
     # Вводное сообщение
     print("1 - Получить информацию о заказах с информацией о покупателях\n"
@@ -47,28 +47,28 @@ if __name__ == '__main__':
     else:
         # Вызвать запрос, который попросил пользователь
         if userChoice == 1:
-            query.readOrdersData(mycursor)
+            query.readOrdersData(myСursor)
         elif userChoice == 2:
-            query.readPcGamesData(mycursor)
+            query.readPcGamesData(myСursor)
         elif userChoice == 3:
-            query.addGenre(mycursor, dbConnection)
+            query.addGenre(myСursor, dbConnection)
         elif userChoice == 4:
-            query.addOrder(mycursor, dbConnection)
+            query.addOrder(myСursor, dbConnection)
         elif userChoice == 5:
-            query.updateDeveloperName(mycursor, dbConnection)
+            query.updateDeveloperName(myСursor, dbConnection)
         elif userChoice == 6:
-            query.updatePcGameInfo(mycursor, dbConnection)
+            query.updatePcGameInfo(myСursor, dbConnection)
         elif userChoice == 7:
-            query.deleteGenre(mycursor, dbConnection)
+            query.deleteGenre(myСursor, dbConnection)
         elif userChoice == 8:
-            query.deleteDeveloper(mycursor, dbConnection)
+            query.deleteDeveloper(myСursor, dbConnection)
         elif userChoice == 9:
-            query.getUsersOrders(mycursor)
+            query.getUsersOrders(myСursor)
         elif userChoice == 10:
-            query.getDiscountedGames(mycursor)
+            query.getDiscountedGames(myСursor)
 
     # Закрыть доступ к БД
-    mycursor.close()
+    myСursor.close()
     dbConnection.close()
 
 
