@@ -1,6 +1,6 @@
 # ПОЛУЧЕНИЕ ДАННЫХ
 # Получить информацию о заказах с информацией о покупателях
-def readOrdersData(myСursor):
+def readOrdersData(myCursor):
     # Обратиться к БД с запросом
     readOrdersDataQuery = """
                           SELECT users.login, orders.product_units, orders.order_date
@@ -8,26 +8,26 @@ def readOrdersData(myСursor):
                           INNER JOIN users
                           ON orders.id_users = users.id_users;
     """
-    myСursor.execute(readOrdersDataQuery)
-    for dbData in myСursor:
+    myCursor.execute(readOrdersDataQuery)
+    for dbData in myCursor:
         print(dbData)
 
 # Получить название игры, ее стоимость, ее разработчика(developer)
-def readPcGamesData(myСursor):
+def readPcGamesData(myCursor):
     # Обратиться к БД с запросом
     readPcGamesDataQuery = """
                     SELECT pc_games.name, pc_games.price, developers.company_name
                     FROM pc_games
                     JOIN developers ON pc_games.id_developers = developers.id_developers
     """
-    myСursor.execute(readPcGamesDataQuery)
-    for dbData in myСursor:
+    myCursor.execute(readPcGamesDataQuery)
+    for dbData in myCursor:
         print(dbData)
 
 
 # ДОБАВЛЕНИЕ ДАННЫХ
 # Добавить жанр в таблицу genres
-def addGenre(myСursor, dbConnection):
+def addGenre(myCursor, dbConnection):
     # Получить данные от пользователя
     genreName = input("Имя жанра: ")
     genreDesc = input("Описание жанра: ")
@@ -36,11 +36,11 @@ def addGenre(myСursor, dbConnection):
     # Обратиться к БД с запросом
     addGenreQuery = "INSERT INTO genres (name, description) VALUES (%s,%s);"
 
-    myСursor.execute(addGenreQuery % genre)
+    myCursor.execute(addGenreQuery % genre)
     dbConnection.commit()
 
 # Добавить новый заказ для пользователя по ID
-def addOrder(myСursor, dbConnection):
+def addOrder(myCursor, dbConnection):
     # Получить данные от пользователя
     orderDate = input("Введите дату заказа (YYYY-MM-DD HH:MM:SS): ")
     productUnits = int(input("Введите кол-во доступных единиц товара: "))
@@ -49,20 +49,20 @@ def addOrder(myСursor, dbConnection):
 
     # Обратиться к БД с запросом
     addOrderQuery = "INSERT INTO orders (order_date, product_units, id_users) VALUES ('%s', %d, %d);"
-    myСursor.execute(addOrderQuery % order)
+    myCursor.execute(addOrderQuery % order)
     dbConnection.commit()
 
 
 # ИЗМЕНЕНИЕ ДАННЫХ
 # Изменить имя компании разработчика по id
-def updateDeveloperName(myСursor, dbConnection):
+def updateDeveloperName(myCursor, dbConnection):
     # Получить от пользователя id компании, чье имя хотим изменить
     idDeveloper = int(input("Введите id компании, чье имя хотите изменить: "))
 
     # Проверить имеется ли хотя бы одна запись с заданным именем в таблице
     checkDeveloperId = "SELECT id_developers FROM developers WHERE id_developers = %d;"
-    myСursor.execute(checkDeveloperId % idDeveloper)
-    result = myСursor.fetchone()
+    myCursor.execute(checkDeveloperId % idDeveloper)
+    result = myCursor.fetchone()
 
     if result:
         # Получить новое имя компании
@@ -71,21 +71,21 @@ def updateDeveloperName(myСursor, dbConnection):
         # Изменить название компании разработчика по ID
         updateDeveloperNameQuery = "UPDATE db.developers SET db.developers.company_name = '%s' WHERE db.developers.id_developers = %d;"
         newDeveloperName = (newCompanyName, idDeveloper)
-        myСursor.execute(updateDeveloperNameQuery % newDeveloperName)
+        myCursor.execute(updateDeveloperNameQuery % newDeveloperName)
         dbConnection.commit()
     else:
         # Вывести ошибку, что нет полей с заданным пользователем id
         print(f"В таблице developers нет разработчика с id {idDeveloper}")
 
 # Изменить информацию об игре по имени
-def updatePcGameInfo(myСursor, dbConnection):
+def updatePcGameInfo(myCursor, dbConnection):
     # Получить название игры, чью информацию мы хотим изменить
     gameName = input("Название игры: ")
 
     # Проверить имеется ли хотя бы одна запись с заданным именем в таблице
     checkPcGameName = "SELECT * FROM pc_games WHERE name = '%s';"
-    myСursor.execute(checkPcGameName % gameName)
-    result = myСursor.fetchone()
+    myCursor.execute(checkPcGameName % gameName)
+    result = myCursor.fetchone()
 
     if result:
         # Получить от пользователя новые данные
@@ -115,7 +115,7 @@ def updatePcGameInfo(myСursor, dbConnection):
             newGameName, gameDesc, gameUnits, gamePrice, gameReleaseDate, gameIdGenre, gameIdPublishers,
             gameIdDeveloper,
             gameName)
-        myСursor.execute(updatePcGameInfoQuery % pcGameInfo)
+        myCursor.execute(updatePcGameInfoQuery % pcGameInfo)
         dbConnection.commit()
     else:
         # Вывести ошибку, что в таблице с играми нет игры с заданным пользователем именем
@@ -124,35 +124,35 @@ def updatePcGameInfo(myСursor, dbConnection):
 
 # УДАЛЕНИЕ ДАННЫХ
 # Удалить жанр по названию
-def deleteGenre(myСursor, dbConnection):
+def deleteGenre(myCursor, dbConnection):
     genreName = input("Введите название жанра: ")
 
     # Проверить имеется ли хотя бы одна запись с данным именем жанра в таблице
     checkGenreName = "SELECT * FROM genres WHERE name = '%s';"
-    myСursor.execute(checkGenreName % genreName)
-    result = myСursor.fetchone()
+    myCursor.execute(checkGenreName % genreName)
+    result = myCursor.fetchone()
 
     if result:
         # Обратиться к БД с запросом
         deleteGenreQuery = "DELETE FROM genres WHERE name = '%s';"
-        myСursor.execute(deleteGenreQuery % genreName)
+        myCursor.execute(deleteGenreQuery % genreName)
         dbConnection.commit()
     else:
         print(f"В таблице genres нет жанра с именем {genreName}")
 
 # Удалить разработчика по названию
-def deleteDeveloper(myСursor, dbConnection):
+def deleteDeveloper(myCursor, dbConnection):
     developerName = input("Введите имя компании разработчика: ")
 
     # Проверить имеется ли хотя бы одна запись с данным именем компании в таблице
     checkDeveloperName = "SELECT * FROM developers WHERE company_name = '%s';"
-    myСursor.execute(checkDeveloperName % developerName)
-    result = myСursor.fetchone()
+    myCursor.execute(checkDeveloperName % developerName)
+    result = myCursor.fetchone()
 
     if result:
         # Обратиться к БД с запросом
         deleteDeveloperQuery = "DELETE FROM developers WHERE company_name = '%s';"
-        myСursor.execute(deleteDeveloperQuery % developerName)
+        myCursor.execute(deleteDeveloperQuery % developerName)
         dbConnection.commit()
     else:
         print(f"В таблице developers нет поля с именем {developerName}")
@@ -160,7 +160,7 @@ def deleteDeveloper(myСursor, dbConnection):
 
 # Аналитические запросы
 # Запрос №1 : Получить список всех пользователей и количество их заказов с разбивкой по месяцам за последний год
-def getUsersOrders(myСursor):
+def getUsersOrders(myCursor):
     # Обратиться к БД с запросом
     getUsersOrdersQuery = """
             SELECT 
@@ -180,8 +180,8 @@ def getUsersOrders(myСursor):
                 year, month, users.id_users
         """
 
-    myСursor.execute(getUsersOrdersQuery)
-    result = myСursor.fetchall()
+    myCursor.execute(getUsersOrdersQuery)
+    result = myCursor.fetchall()
 
     # Вывести результат запроса
     if result:
@@ -191,7 +191,7 @@ def getUsersOrders(myСursor):
         print("За последний год не было совершено заказов")
 
 # Запрос №2: Получить список всех игр, у которых есть скидки в данный момент и указание на текущую скидку (по процентам и по цене в рублях)
-def getDiscountedGames(myСursor):
+def getDiscountedGames(myCursor):
     # Обратиться к БД с запросом
     getDiscountedGamesQuery = """
                             SELECT pc_games.name, pc_games.price, discounts.discount_percentage, discounts.discount_price
@@ -199,8 +199,8 @@ def getDiscountedGames(myСursor):
                             INNER JOIN discounts ON pc_games.id_games = discounts.id_games 
                             WHERE NOW() BETWEEN discounts.start_date AND discounts.end_date  
     """
-    myСursor.execute(getDiscountedGamesQuery)
-    result = myСursor.fetchall()
+    myCursor.execute(getDiscountedGamesQuery)
+    result = myCursor.fetchall()
 
     # Вывести результат запроса
     if result:

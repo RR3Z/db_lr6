@@ -2,7 +2,7 @@ import sys
 
 import mysql.connector
 from mysql.connector import Error
-import mySqlQueries as query
+import mySqlQueries as queries
 
 # Соединить приложение и БД
 def create_connection(host_name, user_name, user_password, db_name):
@@ -47,25 +47,25 @@ if __name__ == '__main__':
     else:
         # Вызвать запрос, который попросил пользователь
         if userChoice == 1:
-            query.readOrdersData(myСursor)
+            queries.readOrdersData(myСursor)
         elif userChoice == 2:
-            query.readPcGamesData(myСursor)
+            queries.readPcGamesData(myСursor)
         elif userChoice == 3:
-            query.addGenre(myСursor, dbConnection)
+            queries.addGenre(myСursor, dbConnection)
         elif userChoice == 4:
-            query.addOrder(myСursor, dbConnection)
+            queries.addOrder(myСursor, dbConnection)
         elif userChoice == 5:
-            query.updateDeveloperName(myСursor, dbConnection)
+            queries.updateDeveloperName(myСursor, dbConnection)
         elif userChoice == 6:
-            query.updatePcGameInfo(myСursor, dbConnection)
+            queries.updatePcGameInfo(myСursor, dbConnection)
         elif userChoice == 7:
-            query.deleteGenre(myСursor, dbConnection)
+            queries.deleteGenre(myСursor, dbConnection)
         elif userChoice == 8:
-            query.deleteDeveloper(myСursor, dbConnection)
+            queries.deleteDeveloper(myСursor, dbConnection)
         elif userChoice == 9:
-            query.getUsersOrders(myСursor)
+            queries.getUsersOrders(myСursor)
         elif userChoice == 10:
-            query.getDiscountedGames(myСursor)
+            queries.getDiscountedGames(myСursor)
 
     # Закрыть доступ к БД
     myСursor.close()
